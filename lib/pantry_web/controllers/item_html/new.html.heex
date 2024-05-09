@@ -1,0 +1,23 @@
+<.header>
+    New Item
+</.header>
+
+<.simple_form
+    :let={f}
+    for={@changeset}
+    phx-change="validate"
+    action={~p"/items"}>
+
+    <.input type="text" field={f[:name]} label="Name" />
+    <.input type="text" 
+            inputmode="numeric" 
+            pattern="[0-9\.]*" 
+            field={f[:amount]} 
+            label="Amount" />
+    <.input type="text" field={f[:unit]} label="Unit" />
+    <.input type="date" field={f[:best_before]} label="Best Before" />
+
+    <:actions>
+        <.button>Save</.button>
+    </:actions>
+</.simple_form>
