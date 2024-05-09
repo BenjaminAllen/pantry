@@ -46,4 +46,24 @@ defmodule Pantry.Food do
         result
     end
   end
+
+  def freeze_item(id) do
+    result = get_item(id)
+    |> Item.changeset(%{frozen_on: Date.utc_today()})
+    |> Repo.update()
+
+    PubSub.broadcast(Pantry.PubSub, @topic, {:food, list_items()})
+
+    result
+  end
+
+  def defrost_item(id) do
+    result = get_item(id)
+    |> Item.changeset(%{defrosted_on: Date.utc_today()})
+    |> Repo.update()
+
+    PubSub.broadcast(Pantry.PubSub, @topic, {:food, list_items()})
+
+    result
+  end
 end
