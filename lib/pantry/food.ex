@@ -1,8 +1,10 @@
 defmodule Pantry.Food do
   import Ecto.Query
-
+  alias Phoenix.PubSub
   alias Pantry.Repo
   alias Pantry.Food.Item
+
+  @topic "inventory"
 
   def get_item(id) do
     Repo.get(Item, id)
@@ -21,12 +23,27 @@ defmodule Pantry.Food do
   end
 
   def add_item(attrs \\ %{}) do
-    %Item{}
-    |> Item.changeset(attrs)
-    |> Repo.insert()
+    insert_result =
+      %Item{}
+      |> Item.changeset(attrs)
+      |> Repo.insert()
+
+    case insert_result do
+      {:ok, result} ->
+        PubSub.broadcast(Pantry.PubSub, @topic, {:food, list_items()})
+        {:ok, result}
+      insert_result ->
+        insert_result
+    end
   end
 
   def remove_item(%Item{} = item) do
-    Repo.delete(item)
+    case Repo.delete(item) do
+      {:ok, result} ->
+        PubSub.broadcast(Pantry.PubSub, @topic, {:food, list_items()})
+        {:ok, result}
+      result ->
+        result
+    end
   end
 end

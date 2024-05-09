@@ -17,9 +17,11 @@ defmodule PantryWeb.Router do
   scope "/", PantryWeb do
     pipe_through :browser
 
-    resources "/items", ItemController, only: [:index, :new, :create, :delete]
+    resources "/items", ItemController, only: [:new, :create, :delete, :update]
 
     get "/", PageController, :home
+
+    live("/inventory", Inventory)
   end
 
   # Other scopes may use custom stacks.
