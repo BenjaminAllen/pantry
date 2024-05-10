@@ -102,20 +102,20 @@ defmodule PantryWeb.Inventory do
     end
   end
 
-  def best_before(%{best_before: best_before}) do
+  defp best_before(%{best_before: best_before}) do
     Calendar.strftime(best_before, "%d-%m-%y")
   end
 
-  def frozen_on(%{frozen_on: frozen_on}) do
+  defp frozen_on(%{frozen_on: frozen_on}) do
     Calendar.strftime(frozen_on, "%d-%m-%y")
   end
 
-  def pantry_items(items) do
+  defp pantry_items(items) do
     Enum.filter(items, &(&1.frozen_on == nil || &1.defrosted_on != nil))
     |> IO.inspect(label: :pantry_items)
   end
 
-  def frozen_items(items) do
+  defp frozen_items(items) do
     Enum.filter(items, &(&1.frozen_on != nil && &1.defrosted_on == nil))
     |> IO.inspect(label: :frozen_items)
   end
